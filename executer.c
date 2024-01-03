@@ -17,7 +17,8 @@ void open_and_read(char **argv)
 		open_error(argv);
 	while ((line_size = getline(&buf, &len, fp)) != -1)
 	{
-		token = strtok(buf, "\n\t\r ");
+		token = trim_spaces(strtok(buf, "\n\t\r "));
+
 		if (*token == '\0')
 			continue;
 		strcpy(command, token);
@@ -80,3 +81,26 @@ int is_comment(char *token, int line_counter)
 	}
 	return (-1);
 }
+
+
+char *trim_spaces(char *str) {
+    char *end;
+
+    while (isspace((unsigned char)*str)) {
+        str++;
+    }
+
+    if (*str == 0) {
+        return str;
+    }
+
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    end[1] = '\0';
+
+    return str;
+}
+

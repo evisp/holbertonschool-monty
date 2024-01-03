@@ -67,6 +67,7 @@ void pchar_error2(unsigned int line);
 void open_and_read(char **argv);
 int is_number(char *token);
 int is_comment(char *token, int line_counter);
+char *trim_spaces(char *str);
 
 /*opcodes */
 void (*get_op_code(char *token, unsigned int line)) (stack_t **, unsigned int);
