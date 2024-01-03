@@ -17,11 +17,11 @@ void open_and_read(char **argv)
 		open_error(argv);
 	while ((line_size = getline(&buf, &len, fp)) != -1)
     {
-        token = trim_spaces(strtok(buf, "\n\t\r "));
-        if (*token == '\0') {
-            // Blank line, skip to the next iteration
+        token = strtok(buf, "\n\t\r ");
+        
+        // Skip blank lines and lines with only spaces/tabs
+        if (token == NULL || *token == '\0')
             continue;
-        }
 
         strcpy(command, token);
         if (is_comment(token, line_counter) == 1)
@@ -29,8 +29,16 @@ void open_and_read(char **argv)
 
         if (strcmp(token, "push") == 0)
         {
-            token = trim_spaces(strtok(NULL, "\n\t\r "));
-            if (token == NULL || is_number(token) == -1)
+            token = strtok(NULL, "\n\t\r ");
+            
+            // Check for extra tokens after 'push'
+            if (token == NULL)
+                not_int_err(line_counter);
+
+            // Trim leading and trailing spaces from the token
+            token = trim_spaces(token);
+
+            if (is_number(token) == -1)
                 not_int_err(line_counter);
 
             number = atoi(token);
@@ -46,6 +54,7 @@ void open_and_read(char **argv)
 
         line_counter++;
     }
+
 
 	fclose(fp);
 	if (buf != NULL)
