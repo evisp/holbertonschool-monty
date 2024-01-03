@@ -15,15 +15,19 @@ void open_and_read(char **argv)
 	fp = fopen(argv[1], "r");
 	if (fp == NULL)
 		open_error(argv);
-	while ((line_size = getline(&buf, &len, fp)) != -1)
+	 while ((line_size = getline(&buf, &len, fp)) != -1)
     {
         // Trim leading and trailing spaces from the line
         char *trimmed_line = trim_spaces(buf);
 
+        // Skip blank lines
+        if (strlen(trimmed_line) == 0)
+            continue;
+
         token = strtok(trimmed_line, "\n\t\r ");
 
-        // Skip blank lines
-        if (token == NULL || *token == '\0')
+        // Blank lines may result in a NULL token, so skip them
+        if (token == NULL)
             continue;
 
         strcpy(command, token);
@@ -57,6 +61,7 @@ void open_and_read(char **argv)
 
         line_counter++;
     }
+
 
 
 	fclose(fp);
