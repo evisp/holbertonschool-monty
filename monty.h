@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 
-extern int n;
+extern int n, number;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)

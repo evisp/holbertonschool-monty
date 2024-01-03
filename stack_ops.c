@@ -1,6 +1,6 @@
 #include "monty.h"
 
-int number;
+int number; 
 
 void _push(stack_t **top, __attribute__ ((unused)) unsigned int line)
 {
