@@ -17,9 +17,12 @@ void open_and_read(char **argv)
 		open_error(argv);
 	while ((line_size = getline(&buf, &len, fp)) != -1)
     {
-        token = strtok(buf, "\n\t\r ");
-        
-        // Skip blank lines and lines with only spaces/tabs
+        // Trim leading and trailing spaces from the line
+        char *trimmed_line = trim_spaces(buf);
+
+        token = strtok(trimmed_line, "\n\t\r ");
+
+        // Skip blank lines
         if (token == NULL || *token == '\0')
             continue;
 
@@ -30,7 +33,7 @@ void open_and_read(char **argv)
         if (strcmp(token, "push") == 0)
         {
             token = strtok(NULL, "\n\t\r ");
-            
+
             // Check for extra tokens after 'push'
             if (token == NULL)
                 not_int_err(line_counter);
