@@ -16,32 +16,37 @@ void open_and_read(char **argv)
 	if (fp == NULL)
 		open_error(argv);
 	while ((line_size = getline(&buf, &len, fp)) != -1)
-	{
-		token = trim_spaces(strtok(buf, "\n\t\r "));
+    {
+        token = trim_spaces(strtok(buf, "\n\t\r "));
+        if (*token == '\0') {
+            // Blank line, skip to the next iteration
+            continue;
+        }
 
-		if (*token == '\0')
-			continue;
-		strcpy(command, token);
-		if (is_comment(token, line_counter) == 1)
-			continue;
-		if (strcmp(token, "push") == 0)
-		{
-			token = strtok(NULL, "\n\t\r ");
-			if (token == NULL || is_number(token) == -1)
-				not_int_err(line_counter);
-			number = atoi(token);
-        /*p_func will receive the function to execute*/
-			p_func = get_op_code(command, line_counter);
-     	/* p_func takes the place of the function to execute: push, pall, etc*/
-			p_func(&top, line_counter);
-		}
-		else
-		{
-			p_func = get_op_code(token, line_counter);
-			p_func(&top, line_counter);
-		}
-		line_counter++;
-	}
+        strcpy(command, token);
+        if (is_comment(token, line_counter) == 1)
+            continue;
+
+        if (strcmp(token, "push") == 0)
+        {
+            token = trim_spaces(strtok(NULL, "\n\t\r "));
+            if (token == NULL || is_number(token) == -1)
+                not_int_err(line_counter);
+
+            number = atoi(token);
+
+            p_func = get_op_code(command, line_counter);
+            p_func(&top, line_counter);
+        }
+        else
+        {
+            p_func = get_op_code(token, line_counter);
+            p_func(&top, line_counter);
+        }
+
+        line_counter++;
+    }
+
 	fclose(fp);
 	if (buf != NULL)
 		free(buf);
